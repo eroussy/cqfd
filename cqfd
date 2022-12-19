@@ -495,7 +495,14 @@ project_name="$name"
 project_build_context="$build_context"
 
 if [ -n "$meta_flavor" ]; then
-	echo "meta flavor detected : $meta_flavor"
+	
+	if grep -qw "$meta_flavor" <<< "$meta_flavors"; then
+		cfg.section."$meta_flavor"
+	else
+		die "meta_flavor \"$meta_flavor\" not found in meta_flavors list"
+	fi
+
+	echo "do $meta_flavor"
 fi
 
 do_flavor $flavor
