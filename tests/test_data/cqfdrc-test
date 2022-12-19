@@ -1,6 +1,7 @@
 [project]
 org='cqfd'
 name='test'
+meta_flavors='qux'
 
 [foo]
 command='make foo'
@@ -12,6 +13,14 @@ command='make bar'
 files=bar
 archive=cqfd-%Cf.tar.xz
 
+[baz]
+command='make baz'
+files=baz
+archive=cqfd-%Cf.tar.xz
+
+[qux]
+launch='foo baz'
+
 [build]
-flavors='foo bar'
+flavors='foo bar baz'
 command='make build'
