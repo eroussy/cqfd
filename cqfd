@@ -494,6 +494,10 @@ project_org="$org"
 project_name="$name"
 project_build_context="$build_context"
 
+# Meta flavor should be in project !
+# So should flavors ?
+# /!\
+# /!\
 if [ -n "$meta_flavor" ]; then
 	
 	if grep -qw "$meta_flavor" <<< "$meta_flavors"; then
