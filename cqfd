@@ -353,6 +353,7 @@ EOF
 	echo $tmpfile
 }
 
+# config_load_project - load project setting from cqfdrc
 config_load_project() {
 	# parse file and project section
 	IFS="$IFS" parse_ini_config_file "$cqfdrc"
@@ -362,7 +363,7 @@ config_load_project() {
 	project_build_context="$build_context"
 }
 
-# config_load_flavor() - load build settings from cqfdrc
+# config_load_flavor - load build settings from cqfdrc
 # $1: optional "flavor" of the build, is a suffix of command.
 config_load_flavor() {
 	cfg.section.build # load the [build] section
@@ -399,6 +400,8 @@ config_load_flavor() {
 	fi
 }
 
+# launch_flavor - Run the docker container with the flavor settings
+# $1: optional "flavor" of the build, is a suffix of command.
 launch_flavor() {
 	config_load_flavor $1
 
@@ -411,6 +414,22 @@ launch_flavor() {
 	fi
 
 	docker_run "$build_cmd"
+}
+
+# launch_meta_flavor - Lauch all flavors listed in this meta flavor
+# $1: the "meta_flavor" of the build, is a suffix of command.
+launch_meta_flavor() {
+
+	if grep -qw "$1" <<< "$meta_flavors"; then
+		cfg.section."$meta_flavor"
+	else
+		die "meta_flavor \"$meta_flavor\" not found in meta_flavors list"
+	fi
+
+	for flavor in $launch
+	do
+		launch_flavor $flavor
+	done
 }
 
 has_to_release=false
@@ -443,6 +462,7 @@ while [ $# -gt 0 ]; do
 	-B)
 		shift
 		meta_flavor="$1"
+		break # cqfd -B is not meant to be use with anything else
 		;;
 	-d)
 		shift
@@ -496,26 +516,10 @@ while [ $# -gt 0 ]; do
 	shift
 done
 
-
 config_load_project
 
-# Meta flavor should be in project !
-# So should flavors ?
-# /!\
-# /!\
 if [ -n "$meta_flavor" ]; then
-	
-	if grep -qw "$meta_flavor" <<< "$meta_flavors"; then
-		cfg.section."$meta_flavor"
-	else
-		die "meta_flavor \"$meta_flavor\" not found in meta_flavors list"
-	fi
-
-	for flavor in $launch
-	do
-		launch_flavor $flavor
-	done
-	
+	launch_meta_flavor $meta_flavor
 else
 	launch_flavor $flavor
 fi
