@@ -353,10 +353,10 @@ EOF
 	echo $tmpfile
 }
 
-# config_load_project - load project setting from cqfdrc
+# config_load_project - load project settings from cqfdrc
 config_load_project() {
-	# parse file and project section
 	IFS="$IFS" parse_ini_config_file "$cqfdrc"
+
 	cfg.section.project # load the [project] section
 	project_org="$org"
 	project_name="$name"
@@ -400,7 +400,7 @@ config_load_flavor() {
 	fi
 }
 
-# launch_flavor - Run the docker container with the flavor settings
+# launch_flavor - run the docker container with the flavor settings
 # $1: optional "flavor" of the build, is a suffix of command.
 launch_flavor() {
 	config_load_flavor $1
@@ -416,7 +416,7 @@ launch_flavor() {
 	docker_run "$build_cmd"
 }
 
-# launch_meta_flavor - Lauch all flavors listed in this meta flavor
+# launch_meta_flavor - lauch all flavors listed in this meta flavor
 # $1: the "meta_flavor" of the build, is a suffix of command.
 launch_meta_flavor() {
 
