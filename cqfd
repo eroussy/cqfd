@@ -473,6 +473,7 @@ while [ $# -gt 0 ]; do
 done
 
 do_flavor() {
+	echo "   DEB : do flavor : $1"
 	config_load $1
 
 	if [ -n "$build_cmd_alt" ]; then
@@ -506,10 +507,16 @@ if [ -n "$meta_flavor" ]; then
 		die "meta_flavor \"$meta_flavor\" not found in meta_flavors list"
 	fi
 
-	echo "do $meta_flavor"
+	echo "   DEB :do meta $meta_flavors"
+	#flavors_array=($to_build)
+	for flavor in $to_build
+	do
+		do_flavor $flavor
+	done
+	
+else
+	do_flavor $flavor
 fi
-
-do_flavor $flavor
 
 if $has_to_release; then
 	make_archive
