@@ -181,6 +181,30 @@ command, files, archive, distro.
 
 Flavors from a `.cqfdrc` file can be listed using the `flavors` argument.
 
+### Using multi flavors ###
+
+Once many flavors are used, it may be interesting to build multiple flavors at once without calling each of them manually (for example while working with release on different operating systems). This can be done by defining a multi flavor.
+
+A multi flavor is described in the same way as a flavor but contains only one field ``targets`` with the list of flavors to build.
+
+All multi\_flavors must be listed in the ``[project]`` section.
+
+    [project]
+    ...
+    multi_flavors='all-os'
+
+    [fedora]
+    command='make OS=FEDORA'
+
+    [ubuntu]
+    command='make OS=UBUNTU'
+
+    [build]
+    command='make'
+
+    [all-os]
+    targets='fedora ubuntu'
+
 ### Environment variables ###
 
 The following environment variables are supported by cqfd to provide

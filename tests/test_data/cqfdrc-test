@@ -1,6 +1,7 @@
 [project]
 org='cqfd'
 name='test'
+multi_flavors='multi'
 
 [foo]
 command='make foo'
@@ -12,6 +13,14 @@ command='make bar'
 files=bar
 archive=cqfd-%Cf.tar.xz
 
+[baz]
+command='make baz'
+files=baz
+archive=cqfd-%Cf.tar.xz
+
+[multi]
+targets='foo baz'
+
 [build]
-flavors='foo bar'
+flavors='foo bar baz'
 command='make build'
