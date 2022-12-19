@@ -33,13 +33,14 @@ usage() {
 Usage: $PROGNAME [OPTIONS] [COMMAND] [COMMAND OPTIONS] [ARGUMENTS]
 
 Options:
-    -f <file>           Use file as config file (default .cqfdrc).
-    -d <directory>      Use directory as cqfd directory (default .cqfd).
-    -C <directory>      Use the specified working directory.
-    -b <flavor_name>    Target a specific build flavor.
-    -q                  Turn on quiet mode
-    -v or --version     Show version.
-    -h or --help        Show this help text.
+    -f <file>             Use file as config file (default .cqfdrc).
+    -d <directory>        Use directory as cqfd directory (default .cqfd).
+    -C <directory>        Use the specified working directory.
+    -b <flavor_name>      Target a specific build flavor.
+    -B <meta_flavor_name> Target a specific meta flavor
+    -q                    Turn on quiet mode
+    -v or --version       Show version.
+    -h or --help          Show this help text.
 
 Commands:
     init     Initialize project build container
@@ -353,16 +354,19 @@ EOF
 	echo $tmpfile
 }
 
-# config_load() - load build settings from cqfdrc
-# $1: optional "flavor" of the build, is a suffix of command.
-config_load() {
+# config_load_project - load project settings from cqfdrc
+config_load_project() {
 	IFS="$IFS" parse_ini_config_file "$cqfdrc"
 
 	cfg.section.project # load the [project] section
 	project_org="$org"
 	project_name="$name"
 	project_build_context="$build_context"
+}
 
+# config_load_flavor - load build settings from cqfdrc
+# $1: optional "flavor" of the build, is a suffix of command.
+config_load_flavor() {
 	cfg.section.build # load the [build] section
 
 	# build parameters may be overriden by a flavor defined in the
@@ -397,6 +401,38 @@ config_load() {
 	fi
 }
 
+# launch_flavor - run the docker container with the flavor settings
+# $1: optional "flavor" of the build, is a suffix of command.
+launch_flavor() {
+	config_load_flavor $1
+
+	if [ -n "$build_cmd_alt" ]; then
+		build_cmd=$build_cmd_alt
+	elif [ -n "$build_cmd_append" ]; then
+		build_cmd+=" $build_cmd_append"
+	elif [ -z "$build_cmd" ]; then
+		die "No build.command defined in $cqfdrc !"
+	fi
+
+	docker_run "$build_cmd"
+}
+
+# launch_meta_flavor - lauch all flavors listed in this meta flavor
+# $1: the "meta_flavor" of the build, is a suffix of command.
+launch_meta_flavor() {
+
+	if grep -qw "$1" <<< "$meta_flavors"; then
+		cfg.section."$meta_flavor"
+	else
+		die "meta_flavor \"$meta_flavor\" not found in meta_flavors list"
+	fi
+
+	for flavor in $launch
+	do
+		launch_flavor $flavor
+	done
+}
+
 has_to_release=false
 while [ $# -gt 0 ]; do
 	case "$1" in
@@ -409,18 +445,25 @@ while [ $# -gt 0 ]; do
 		exit 0
 		;;
 	init)
-		config_load $flavor
+		config_load_project
+		config_load_flavor $flavor
 		docker_build
 		exit $?
 		;;
 	flavors)
-		config_load
+		config_load_project
+		config_load_flavor
 		echo $flavors
 		exit 0
 		;;
 	-b)
 		shift
 		flavor="$1"
+		;;
+	-B)
+		shift
+		meta_flavor="$1"
+		break # cqfd -B is not meant to be use with anything else
 		;;
 	-d)
 		shift
@@ -474,17 +517,13 @@ while [ $# -gt 0 ]; do
 	shift
 done
 
-config_load $flavor
+config_load_project
 
-if [ -n "$build_cmd_alt" ]; then
-	build_cmd=$build_cmd_alt
-elif [ -n "$build_cmd_append" ]; then
-	build_cmd+=" $build_cmd_append"
-elif [ -z "$build_cmd" ]; then
-	die "No build.command defined in $cqfdrc !"
+if [ -n "$meta_flavor" ]; then
+	launch_meta_flavor $meta_flavor
+else
+	launch_flavor $flavor
 fi
-
-docker_run "$build_cmd"
 
 if $has_to_release; then
 	make_archive

@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# Test the `cqfd -B` command
+
+. `dirname $0`/jtest.inc "$1"
+cqfd="$TDIR/.cqfd/cqfd"
+meta_flavor="qux"
+flavors="foo baz" # flavors called by meta_flavor
+
+cd $TDIR/
+
+################################################################################
+# 'cqfd -B qux run' should build foo and baz but not bar
+################################################################################
+jtest_log info "run cqfd run with a given '$meta_flavor' meta_flavor"
+
+for flavor in $flavors bar
+do
+  test_file=$flavor
+  if [ -f "$test_file" ]; then
+    jtest_log fatal "$test_file already present before test"
+    rm -f $test_file
+    continue
+  fi
+done
+
+jtest_prepare "cqfd run build cmd for '$meta_flavor' meta_flavor"
+$cqfd -B $meta_flavor run
+
+# Wanted flavors should have been called
+for flavor in $flavors
+do
+  test_file=$flavor
+  if ! grep -qw "cqfd" $test_file; then
+    jtest_log fatal "$test_file not present after test"
+    jtest_result fail
+    rm -f $test_file
+    exit 0
+  fi
+done
+
+# Other flavors shouldn't be called
+test_file=bar
+if grep -qw "cqfd" $test_file; then
+  jtest_log fatal "$test_file is present after test and shall not"
+  jtest_result fail
+  rm -f $test_file
+  exit 0
+fi
+
+jtest_result pass
+rm $flavors
+
+################################################################################
+# 'cqfd -B qux false_meta_flavor' should fail
+################################################################################
+jtest_prepare "cqfd run build cmd for a false meta flavor should fail"
+if $cqfd -B false_meta_flavor run; then
+  jtest_result fail
+else
+  jtest_result pass
+fi

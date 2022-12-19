@@ -1,7 +1,7 @@
 .PHONY: all clean build
 
 all:
-	@echo "make foo or bar!"
+	@echo "make foo, bar or baz!"
 
 
 foo:
@@ -12,6 +12,10 @@ bar:
 	@echo making bar
 	@echo cqfd >bar
 
+baz:
+	@echo making baz
+	@echo cqfd >baz
+
 build:
 	@mkdir -p a/b/c
 	@echo cqfd >a/cqfd_a.txt
@@ -19,4 +23,4 @@ build:
 	@echo cqfd_c >a/b/c/cqfd_c.txt
 
 clean:
-	@rm -rf foo bar a/
+	@rm -rf foo bar baz a/
