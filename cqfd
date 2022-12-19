@@ -416,6 +416,10 @@ while [ $# -gt 0 ]; do
 		shift
 		flavor="$1"
 		;;
+	-B)
+		shift
+		meta_flavor="$1"
+		;;
 	-d)
 		shift
 		cqfddir="$1"
@@ -490,7 +494,9 @@ project_org="$org"
 project_name="$name"
 project_build_context="$build_context"
 
-
+if [ -n "$meta_flavor" ]; then
+	echo "meta flavor detected : $meta_flavor"
+fi
 
 do_flavor $flavor
 
