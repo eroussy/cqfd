@@ -356,12 +356,6 @@ EOF
 # config_load() - load build settings from cqfdrc
 # $1: optional "flavor" of the build, is a suffix of command.
 config_load() {
-	IFS="$IFS" parse_ini_config_file "$cqfdrc"
-
-	cfg.section.project # load the [project] section
-	project_org="$org"
-	project_name="$name"
-	project_build_context="$build_context"
 
 	cfg.section.build # load the [build] section
 
@@ -487,6 +481,16 @@ do_flavor() {
 
 	docker_run "$build_cmd"
 }
+
+
+# parse file and project section
+IFS="$IFS" parse_ini_config_file "$cqfdrc"
+cfg.section.project # load the [project] section
+project_org="$org"
+project_name="$name"
+project_build_context="$build_context"
+
+
 
 do_flavor $flavor
 
