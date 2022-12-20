@@ -8,7 +8,7 @@ flavors="foo baz" # flavors called by meta_flavor
 
 cd $TDIR/
 
-jtest_log info "run cqfd run -c with a given '$meta_flavor' meta_flavor"
+jtest_log info "run cqfd run with a given '$meta_flavor' meta_flavor"
 
 for flavor in $flavors bar
 do
@@ -45,3 +45,12 @@ if grep -qw "cqfd" $test_file; then
 fi
 
 jtest_result pass
+rm $flavors
+
+jtest_prepare "cqfd run build cmd for a false meta-flavor should fail"
+ 
+if $cqfd -B false_meta_flavor run; then
+  jtest_result fail
+else
+  jtest_result pass
+fi
