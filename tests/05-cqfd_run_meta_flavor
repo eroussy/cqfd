@@ -8,6 +8,9 @@ flavors="foo baz" # flavors called by meta_flavor
 
 cd $TDIR/
 
+################################################################################
+# 'cqfd -B qux run' should build foo and baz but not bar
+################################################################################
 jtest_log info "run cqfd run with a given '$meta_flavor' meta_flavor"
 
 for flavor in $flavors bar
@@ -47,10 +50,13 @@ fi
 jtest_result pass
 rm $flavors
 
-jtest_prepare "cqfd run build cmd for a false meta-flavor should fail"
- 
+################################################################################
+# 'cqfd -B qux false_meta_flavor' should fail
+################################################################################
+jtest_prepare "cqfd run build cmd for a false meta flavor should fail"
 if $cqfd -B false_meta_flavor run; then
   jtest_result fail
 else
   jtest_result pass
 fi
+
