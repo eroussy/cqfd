@@ -401,9 +401,9 @@ config_load_flavor() {
 	fi
 }
 
-# launch_flavor - run the docker container with the flavor settings
+# run_flavor - run the docker container with the flavor settings
 # $1: optional "flavor" of the build, is a suffix of command.
-launch_flavor() {
+run_flavor() {
 	config_load_flavor $1
 
 	if [ -n "$build_cmd_alt" ]; then
@@ -417,9 +417,9 @@ launch_flavor() {
 	docker_run "$build_cmd"
 }
 
-# launch_meta_flavor - lauch all flavors listed in this meta flavor
+# run_meta_flavor - lauch all flavors listed in this meta flavor
 # $1: the "meta_flavor" of the build, is a suffix of command.
-launch_meta_flavor() {
+run_meta_flavor() {
 
 	if grep -qw "$1" <<< "$meta_flavors"; then
 		cfg.section."$meta_flavor"
@@ -427,9 +427,9 @@ launch_meta_flavor() {
 		die "meta_flavor \"$meta_flavor\" not found in meta_flavors list"
 	fi
 
-	for flavor in $launch
+	for flavor in $targets
 	do
-		launch_flavor $flavor
+		run_flavor $flavor
 	done
 }
 
@@ -520,9 +520,9 @@ done
 config_load_project
 
 if [ -n "$meta_flavor" ]; then
-	launch_meta_flavor $meta_flavor
+	run_meta_flavor $meta_flavor
 else
-	launch_flavor $flavor
+	run_flavor $flavor
 fi
 
 if $has_to_release; then

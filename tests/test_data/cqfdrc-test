@@ -19,7 +19,7 @@ files=baz
 archive=cqfd-%Cf.tar.xz
 
 [qux]
-launch='foo baz'
+targets='foo baz'
 
 [build]
 flavors='foo bar baz'
