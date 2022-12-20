@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Test the `cqfd -B` command
 
 . `dirname $0`/jtest.inc "$1"
 cqfd="$TDIR/.cqfd/cqfd"
@@ -7,7 +8,6 @@ flavors="foo baz" # flavors called by meta_flavor
 
 cd $TDIR/
 
-# concatenate flavor build with an additional option
 jtest_log info "run cqfd run -c with a given '$meta_flavor' meta_flavor"
 
 for flavor in $flavors bar
@@ -23,7 +23,7 @@ done
 jtest_prepare "cqfd run build cmd for '$meta_flavor' meta_flavor"
 $cqfd -B $meta_flavor run
 
-
+# Wanted flavors should have been called
 for flavor in $flavors
 do
   test_file=$flavor
@@ -31,22 +31,17 @@ do
     jtest_log fatal "$test_file not present after test"
     jtest_result fail
     rm -f $test_file
-    fail=set
-    continue
+    exit 0
   fi
 done
 
+# Other flavors shouldn't be called
 test_file=bar
 if grep -qw "cqfd" $test_file; then
   jtest_log fatal "$test_file is present after test and shall not"
   jtest_result fail
   rm -f $test_file
-  fail=set
-  continue
+  exit 0
 fi
 
-if [ -z $fail ]; then
-    jtest_result pass
-fi
-
-rm -f $test_file
+jtest_result pass
