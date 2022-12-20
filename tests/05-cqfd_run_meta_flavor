@@ -3,13 +3,13 @@
 
 . `dirname $0`/jtest.inc "$1"
 cqfd="$TDIR/.cqfd/cqfd"
-meta_flavor="qux"
+meta_flavor="baz_meta"
 flavors="foo baz" # flavors called by meta_flavor
 
 cd $TDIR/
 
 ################################################################################
-# 'cqfd -B qux run' should build foo and baz but not bar
+# 'cqfd -B baz_meta run' should build foo and baz but not bar
 ################################################################################
 jtest_log info "run cqfd run with a given '$meta_flavor' meta_flavor"
 
@@ -51,7 +51,7 @@ jtest_result pass
 rm $flavors
 
 ################################################################################
-# 'cqfd -B qux false_meta_flavor' should fail
+# 'cqfd -B baz_meta false_meta_flavor' should fail
 ################################################################################
 jtest_prepare "cqfd run build cmd for a false meta flavor should fail"
 if $cqfd -B false_meta_flavor run; then

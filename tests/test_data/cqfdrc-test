@@ -1,7 +1,7 @@
 [project]
 org='cqfd'
 name='test'
-meta_flavors='qux'
+meta_flavors='baz_meta'
 
 [foo]
 command='make foo'
@@ -18,7 +18,7 @@ command='make baz'
 files=baz
 archive=cqfd-%Cf.tar.xz
 
-[qux]
+[baz_meta]
 targets='foo baz'
 
 [build]
