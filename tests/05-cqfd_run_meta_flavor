@@ -59,4 +59,3 @@ if $cqfd -B false_meta_flavor run; then
 else
   jtest_result pass
 fi
-
