@@ -208,6 +208,7 @@ All meta\_flavors must be listed in the ``[project]`` section.
     [all-os]
     targets='fedora ubuntu'
 
+For now, meta_flavors are incompatible with the use of `run -c` or `release` commands.
 
 ### Environment variables ###
 
