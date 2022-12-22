@@ -37,7 +37,7 @@ Options:
     -d <directory>        Use directory as cqfd directory (default .cqfd).
     -C <directory>        Use the specified working directory.
     -b <flavor_name>      Target a specific build flavor.
-    -B <meta_flavor_name> Target a specific meta flavor
+    -B <multi_flavor_name> Target a specific multi flavor
     -q                    Turn on quiet mode
     -v or --version       Show version.
     -h or --help          Show this help text.
@@ -417,14 +417,14 @@ run_flavor() {
 	docker_run "$build_cmd"
 }
 
-# run_meta_flavor - lauch all flavors listed in this meta flavor
-# $1: the "meta_flavor" of the build, is a suffix of command.
-run_meta_flavor() {
+# run_multi_flavor - lauch all flavors listed in this multi flavor
+# $1: the "multi_flavor" of the build, is a suffix of command.
+run_multi_flavor() {
 
-	if grep -qw "$1" <<< "$meta_flavors"; then
-		cfg.section."$meta_flavor"
+	if grep -qw "$1" <<< "$multi_flavors"; then
+		cfg.section."$multi_flavor"
 	else
-		die "meta_flavor \"$meta_flavor\" not found in meta_flavors list"
+		die "multi_flavor \"$multi_flavor\" not found in multi_flavors list"
 	fi
 
 	for flavor in $targets
@@ -462,7 +462,7 @@ while [ $# -gt 0 ]; do
 		;;
 	-B)
 		shift
-		meta_flavor="$1"
+		multi_flavor="$1"
 		break # cqfd -B is not meant to be use with anything else
 		;;
 	-d)
@@ -519,8 +519,8 @@ done
 
 config_load_project
 
-if [ -n "$meta_flavor" ]; then
-	run_meta_flavor $meta_flavor
+if [ -n "$multi_flavor" ]; then
+	run_multi_flavor $multi_flavor
 else
 	run_flavor $flavor
 fi

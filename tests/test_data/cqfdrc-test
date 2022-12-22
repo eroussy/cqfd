@@ -1,7 +1,7 @@
 [project]
 org='cqfd'
 name='test'
-meta_flavors='multi'
+multi_flavors='multi'
 
 [foo]
 command='make foo'

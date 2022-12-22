@@ -3,15 +3,15 @@
 
 . `dirname $0`/jtest.inc "$1"
 cqfd="$TDIR/.cqfd/cqfd"
-meta_flavor="multi"
-flavors="foo baz" # flavors called by meta_flavor
+multi_flavor="multi"
+flavors="foo baz" # flavors called by multi_flavor
 
 cd $TDIR/
 
 ################################################################################
 # 'cqfd -B multi run' should build foo and baz but not bar
 ################################################################################
-jtest_log info "run cqfd run with a given '$meta_flavor' meta_flavor"
+jtest_log info "run cqfd run with a given '$multi_flavor' multi_flavor"
 
 for flavor in $flavors bar
 do
@@ -23,8 +23,8 @@ do
   fi
 done
 
-jtest_prepare "cqfd run build cmd for '$meta_flavor' meta_flavor"
-$cqfd -B $meta_flavor run
+jtest_prepare "cqfd run build cmd for '$multi_flavor' multi_flavor"
+$cqfd -B $multi_flavor run
 
 # Wanted flavors should have been called
 for flavor in $flavors
@@ -51,10 +51,10 @@ jtest_result pass
 rm $flavors
 
 ################################################################################
-# 'cqfd -B multi false_meta_flavor' should fail
+# 'cqfd -B multi false_multi_flavor' should fail
 ################################################################################
-jtest_prepare "cqfd run build cmd for a false meta flavor should fail"
-if $cqfd -B false_meta_flavor run; then
+jtest_prepare "cqfd run build cmd for a false multi flavor should fail"
+if $cqfd -B false_multi_flavor run; then
   jtest_result fail
 else
   jtest_result pass

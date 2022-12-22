@@ -181,17 +181,17 @@ command, files, archive, distro.
 
 Flavors from a `.cqfdrc` file can be listed using the `flavors` argument.
 
-### Using meta flavors ###
+### Using multi flavors ###
 
-Once many flavors are used, it may be interesting to build multiple flavors at once without calling each of them manually (for example while working with release on different operating systems). This can be done by defining a meta flavor.
+Once many flavors are used, it may be interesting to build multiple flavors at once without calling each of them manually (for example while working with release on different operating systems). This can be done by defining a multi flavor.
 
-A meta flavor is described the same way as a flavor but contain only one field ``targets`` with the list of flavors to build.
+A multi flavor is described the same way as a flavor but contain only one field ``targets`` with the list of flavors to build.
 
-All meta\_flavors must be listed in the ``[project]`` section.
+All multi\_flavors must be listed in the ``[project]`` section.
 
     [project]
     ...
-    meta_flavors='all-os'
+    multi_flavors='all-os'
 
     [fedora]
     command='make OS=FEDORA'
@@ -207,8 +207,6 @@ All meta\_flavors must be listed in the ``[project]`` section.
 
     [all-os]
     targets='fedora ubuntu'
-
-For now, meta_flavors are incompatible with the use of `run -c` or `release` commands.
 
 ### Environment variables ###
 
