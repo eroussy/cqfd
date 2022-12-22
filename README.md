@@ -185,7 +185,7 @@ Flavors from a `.cqfdrc` file can be listed using the `flavors` argument.
 
 Once many flavors are used, it may be interesting to build multiple flavors at once without calling each of them manually (for example while working with release on different operating systems). This can be done by defining a multi flavor.
 
-A multi flavor is described the same way as a flavor but contain only one field ``targets`` with the list of flavors to build.
+A multi flavor is described in the same way as a flavor but contains only one field ``targets`` with the list of flavors to build.
 
 All multi\_flavors must be listed in the ``[project]`` section.
 
@@ -198,9 +198,6 @@ All multi\_flavors must be listed in the ``[project]`` section.
 
     [ubuntu]
     command='make OS=UBUNTU'
-
-    [debug]
-    command='make DEBUG=1'
 
     [build]
     command='make'

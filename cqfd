@@ -463,7 +463,7 @@ while [ $# -gt 0 ]; do
 	-B)
 		shift
 		multi_flavor="$1"
-		break # cqfd -B is not meant to be use with anything else
+		break # cqfd -B is not meant to be used with anything else
 		;;
 	-d)
 		shift
