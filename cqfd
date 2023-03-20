@@ -464,12 +464,12 @@ while [ $# -gt 0 ]; do
 			fi
 
 			shift
-			build_cmd_append="$*"
+			build_cmd_append=${@@Q}
 			break
 		fi
 
 		# Run alternate command
-		build_cmd_alt="$@"
+		build_cmd_alt=${@@Q}
 		break
 		;;
 	?*)
